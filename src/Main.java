@@ -12,7 +12,7 @@ public class Main {
         int mainChoice;
 
         do {
-            System.out.println("\n===== MINI BANKING MENU =====");
+            System.out.println("===== MINI BANKING MENU =====");
             System.out.println("1 - Enter Bank");
             System.out.println("2 - Enter ATM");
             System.out.println("3 - Admin Area");
@@ -56,7 +56,7 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("\n===== BANK MENU =====");
+            System.out.println("===== BANK MENU =====");
             System.out.println("1 - Add new account directly");
             System.out.println("2 - Display all accounts");
             System.out.println("3 - Search account by username");
@@ -161,7 +161,7 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("\n===== ATM MENU =====");
+            System.out.println("===== ATM MENU =====");
             System.out.println("1 - Balance enquiry");
             System.out.println("2 - Withdraw");
             System.out.println("3 - Back");
@@ -199,7 +199,7 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("\n===== ADMIN MENU =====");
+            System.out.println("===== ADMIN MENU =====");
             System.out.println("1 - View pending account requests");
             System.out.println("2 - Process next account request");
             System.out.println("3 - View bill payment queue");

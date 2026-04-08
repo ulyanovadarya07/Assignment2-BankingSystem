@@ -1,12 +1,12 @@
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
-
 public class BankSystem {
-    LinkedList<BankAccount> accounts = new LinkedList<>();
-    Stack<String> transactionHistory = new Stack<>();
-    Queue<String> billQueue = new LinkedList<>();
-    Queue<AccountRequest> accountRequests = new LinkedList<>();
+    AccountLinkedList accounts = new AccountLinkedList();
+
+    TransactionStack transactionHistory = new TransactionStack();
+
+    BillQueue billQueue = new BillQueue();
+
+    AccountRequestQueue accountRequests = new AccountRequestQueue();
+
 
     // Task 1 - Add account
     public void addAccount(BankAccount account) {
@@ -15,30 +15,19 @@ public class BankSystem {
 
     // Task 1 - Display accounts
     public void displayAccounts() {
-        if (accounts.isEmpty()) {
-            System.out.println("No accounts found.");
-            return;
-        }
-
-        System.out.println("Accounts List:");
-        for (int i = 0; i < accounts.size(); i++) {
-            System.out.println((i + 1) + ". " + accounts.get(i));
-        }
+        accounts.display();
     }
 
     // Task 1 - Search by username
     public BankAccount searchAccountByUsername(String username) {
-        for (BankAccount account : accounts) {
-            if (account.getUsername().equalsIgnoreCase(username)) {
-                return account;
-            }
-        }
-        return null;
+        return accounts.searchByUsername(username);
     }
+
 
     // Task 2 - Deposit
     public void depositMoney(String username, double amount) {
         BankAccount account = searchAccountByUsername(username);
+
         if (account != null) {
             account.deposit(amount);
             transactionHistory.push("Deposit " + amount + " to " + username);
@@ -51,6 +40,7 @@ public class BankSystem {
     // Task 2 - Withdraw
     public void withdrawMoney(String username, double amount) {
         BankAccount account = searchAccountByUsername(username);
+
         if (account != null) {
             double oldBalance = account.getBalance();
             account.withdraw(amount);
@@ -64,96 +54,95 @@ public class BankSystem {
         }
     }
 
+
     // Task 3 - Show last transaction
     public void showLastTransaction() {
-        if (!transactionHistory.isEmpty()) {
-            System.out.println("Last transaction: " + transactionHistory.peek());
-        } else {
+        String last = transactionHistory.peek();
+
+        if (last == null) {
             System.out.println("No transactions found.");
+        } else {
+            System.out.println("Last transaction: " + last);
         }
     }
 
     // Task 3 - Undo last transaction
     public void undoLastTransaction() {
-        if (!transactionHistory.isEmpty()) {
-            System.out.println("Undo -> " + transactionHistory.pop() + " removed");
-        } else {
+        String removed = transactionHistory.pop();
+
+        if (removed == null) {
             System.out.println("No transactions to undo.");
+        } else {
+            System.out.println("Undo -> " + removed + " removed");
         }
     }
 
+
     // Task 4 - Add bill payment
     public void addBillPayment(String billName) {
-        billQueue.add(billName);
+        billQueue.enqueue(billName);
         transactionHistory.push("Bill payment added: " + billName);
         System.out.println("Added: " + billName);
     }
 
     // Task 4 - Process next bill payment
     public void processNextBillPayment() {
-        if (!billQueue.isEmpty()) {
-            String bill = billQueue.poll();
-            System.out.println("Processing: " + bill);
-        } else {
+        String bill = billQueue.dequeue();
+
+        if (bill == null) {
             System.out.println("No bill payments in queue.");
+        } else {
+            System.out.println("Processing: " + bill);
         }
     }
 
     // Task 4 - Display bill queue
     public void displayBillQueue() {
-        if (billQueue.isEmpty()) {
-            System.out.println("Bill queue is empty.");
-        } else {
-            System.out.println("Bill Queue:");
-            for (String bill : billQueue) {
-                System.out.println(bill);
-            }
-        }
+        billQueue.display();
     }
+
 
     // Task 5 - Submit account request
     public void submitAccountRequest(AccountRequest request) {
-        accountRequests.add(request);
+        accountRequests.enqueue(request);
         System.out.println("Account opening request submitted.");
     }
 
     // Task 5 - Process next account request
     public void processNextAccountRequest() {
-        if (!accountRequests.isEmpty()) {
-            AccountRequest request = accountRequests.poll();
+        AccountRequest request = accountRequests.dequeue();
+
+        if (request == null) {
+            System.out.println("No account requests in queue.");
+        } else {
             BankAccount newAccount = new BankAccount(
                     request.getAccountNumber(),
                     request.getUsername(),
                     request.getInitialBalance()
             );
+
             accounts.add(newAccount);
             System.out.println("Request processed. Account created for " + request.getUsername());
-        } else {
-            System.out.println("No account requests in queue.");
         }
     }
 
     // Task 5 - Display pending account requests
     public void displayPendingRequests() {
-        if (accountRequests.isEmpty()) {
-            System.out.println("No pending account requests.");
-        } else {
-            System.out.println("Pending Account Requests:");
-            for (AccountRequest request : accountRequests) {
-                System.out.println(request);
-            }
-        }
+        accountRequests.display();
     }
+
 
     // ATM - Balance enquiry
     public void checkBalance(String username) {
         BankAccount account = searchAccountByUsername(username);
+
         if (account != null) {
             System.out.println("Balance: " + account.getBalance());
         } else {
             System.out.println("Account not found.");
         }
     }
+
 
     // Task 6 - Array of 3 predefined accounts
     public void showArrayAccounts() {
@@ -164,8 +153,8 @@ public class BankSystem {
         arrayAccounts[2] = new BankAccount("A103", "Dana", 50000);
 
         System.out.println("Predefined Array Accounts:");
-        for (BankAccount account : arrayAccounts) {
-            System.out.println(account);
+        for (int i = 0; i < arrayAccounts.length; i++) {
+            System.out.println(arrayAccounts[i]);
         }
     }
 }
